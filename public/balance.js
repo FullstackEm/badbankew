@@ -1,20 +1,21 @@
-function Withdraw(){
+function Balance(){
   const [show, setShow]     = React.useState(true);
   const [status, setStatus] = React.useState('');  
 
   return (
     <Card
-      bgcolor="success"
-      header="Withdraw"
+      bgcolor="info"
+      header="Balance"
       status={status}
-      body={show ? 
-        <WithdrawForm setShow={setShow} setStatus={setStatus}/> :
-        <WithdrawMsg setShow={setShow} setStatus={setStatus}/>}
+      body={show ?
+        <BalanceForm setShow={setShow} setStatus={setStatus}/> :
+        <BalanceMsg setShow={setShow} setStatus={setStatus}/>}
     />
   )
+
 }
 
-function WithdrawMsg(props){
+function BalanceMsg(props){
   return(<>
     <h5>Success</h5>
     <button type="submit" 
@@ -23,35 +24,33 @@ function WithdrawMsg(props){
         props.setShow(true);
         props.setStatus('');
       }}>
-        Withdraw again
+        Check balance again
     </button>
-
-    <a className="btn" href="/#/deposit" onClick={Deposit}>Deposit</a>
   </>);
 }
 
-function WithdrawForm(props){
+function BalanceForm(props){
   const [email, setEmail]   = React.useState('');
-  const [amount, setAmount] = React.useState('');
+  const [balance, setBalance] = React.useState('');  
 
   function handle(){
-    fetch(`/account/update/${email}/-${amount}`)
+    fetch(`/account/findOne/${email}`)
     .then(response => response.text())
     .then(text => {
         try {
             const data = JSON.parse(text);
-            props.setStatus(JSON.stringify(data.value));
+            props.setStatus(text);
             props.setShow(false);
+            setBalance(user.balance);
             console.log('JSON:', data);
         } catch(err) {
-            props.setStatus('Deposit failed')
+            props.setStatus(text)
             console.log('err:', text);
         }
     });
   }
 
-
-  return(<>
+  return (<>
 
     Email<br/>
     <input type="input" 
@@ -60,17 +59,10 @@ function WithdrawForm(props){
       value={email} 
       onChange={e => setEmail(e.currentTarget.value)}/><br/>
 
-    Amount<br/>
-    <input type="number" 
-      className="form-control" 
-      placeholder="Enter amount" 
-      value={amount} 
-      onChange={e => setAmount(e.currentTarget.value)}/><br/>
-
     <button type="submit" 
       className="btn btn-light" 
       onClick={handle}>
-        Withdraw
+        Check Balance
     </button>
 
   </>);

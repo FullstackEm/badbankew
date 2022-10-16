@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
-const url = "mongodb+srv://emdest28:D1e2s3t4@badbank.kyxz7vw.mongodb.net/?retryWrites=true&w=majority";
+const url = 'mongodb://localhost:27017';
 
 MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client) { 
     console.log('Connected!');
@@ -8,7 +8,7 @@ MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client) {
     const dbName = 'myproject';
     const db = client.db(dbName);
 
-    // nre udrt
+    // new user
     var name = 'user' + Math.floor(Math.random()*10000);
     var email = name + '@mit.edu';
 

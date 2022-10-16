@@ -39,11 +39,11 @@ function Card(props){
     
 }
 
-function Login(username, password) {
-  let user = UserContext.users.filter((name)=>{
-    return UserContext.users === username;
-  })
-  if(user.password === password) {
-    setCurrentUser(user)
-  }
-}
+//function Login(username, password) {
+//  let user = UserContext.users.filter((name)=>{
+//    return UserContext.users === username;
+//  })
+//  if(user.password === password) {
+//    setCurrentUser(user)
+//  }
+//}

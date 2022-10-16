@@ -25,6 +25,7 @@ function DepositMsg(props){
       }}>
         Deposit again
     </button>
+    <a className="btn" href="/#/withdraw" onClick={Withdraw}>Withdraw</a>
   </>);
 } 
 

@@ -16,8 +16,17 @@
     "express": "^4.18.2",
     "firebase": "^9.9.3",
     "firebase-admin": "^11.0.1",
-    "mongodb": "^4.10.0",
+    "install": "^0.13.0",
+    "lowdb": "^1.0.0",
+    "mongodb": "^3.7.3",
+    "node": "^16.9.1",
+    "npm": "^7.24.1",
     "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6"
   },
   "repository": {
     "type": "git",

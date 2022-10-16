@@ -1,22 +1,19 @@
-//function CreateAccount(){
-  //const [show, setShow]     = React.useState(true);
-  //const [status, setStatus] = React.useState('');
+function CreateAccount(){
+  const [show, setShow]     = React.useState(true);
+  const [status, setStatus] = React.useState('');
 
- // return (
-   // <Card
-  //    bgcolor="primary"
-  //    header="Create Account"
-  //    status={status}
-  //    body={show ? 
-  //      <CreateForm setShow={setShow}/> : 
-  //      <CreateMsg setShow={setShow}/>}
- //   />
- // )
-//}
-// create user account
-app.get('/account/create/:name/:email/:password', function (req, res) {
-  
-})
+  return (
+    <Card
+      bgcolor="primary"
+      header="Create Account"
+      status={status}
+      body={show ? 
+        <CreateForm setShow={setShow}/> : 
+        <CreateMsg setShow={setShow}/>}
+    />
+  )
+}
+
 function CreateMsg(props){
   return(<>
     <h5>Success</h5>
@@ -30,6 +27,7 @@ function CreateForm(props){
   const [name, setName]         = React.useState('');
   const [email, setEmail]       = React.useState('');
   const [password, setPassword] = React.useState('');
+  const ctx = React.useContext(UserContext);
 
   function handle(){
     console.log(name,email,password);

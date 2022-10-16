@@ -25,10 +25,7 @@ function NavBar(){
       <li class="nav-item">
         <a class="nav-link" href="#/all_data/">Customer Data</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
-    </ul>
+      </ul>
     </div>
 </nav>
     );

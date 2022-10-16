@@ -2,56 +2,86 @@ var express = require('express');
 var app     = express();
 var cors    = require('cors');
 var dal     = require('./dal.js'); // add the package connecting to mongodb
+const e = require('express');
 
 // used to serve static files from public directory
 app.use(express.static('public'));
 app.use(cors());
 
 // create user account
-app.get('/account/create/:name/:email/:password/:userID', function (req, res) {
-    dal.create(req.params.name, req.params.email, req.params.password, req.params.userID)
-    .then((user) => {
-        console.log(user);
-        res.send(user);
+app.get('/account/create/:name/:email/:password', function (req, res) {
+
+    // check if account exists
+    dal.find(req.params.email).
+        then((users) => {
+
+            // if user exists, return error message
+            if(users.length > 0){
+                console.log('User already in exists');
+                res.send('User already in exists');    
+            }
+            else{
+                // else create user
+                dal.create(req.params.name,req.params.email,req.params.password).
+                    then((user) => {
+                        console.log(user);
+                        res.send(user);            
+                    });            
+            }
+
+        });
+});
+
+
+// login user 
+app.get('/account/login/:email/:password', function (req, res) {
+    res.send({
+        emai:   req.params.email,
+        password: req.params.password
+    });
+});
+  
+    // find user account
+app.get('/account/find/:email', function (req, res) {
+
+    dal.find(req.params.email).
+        then((user) => {
+            console.log(user);
+            res.send(user);
+    });
+});
+
+// find one user by email - alternative to find
+app.get('/account/findOne/:email', function (req, res) {
+
+    dal.findOne(req.params.email).
+        then((user) => {
+            console.log(user);
+            res.send(user);
     });
 });
 
 
+// update - deposit/withdraw amount
+app.get('/account/update/:email/:amount', function (req, res) {
 
-// Adding the route definition for getting the user info
-app.get('/account/getbalance/:userID', function(req, res){
-    dal.getBalance(req.params.userID)
-        .then((user) => {
-            console.log(user);
-            res.send(user);
-        });
+    var amount = Number(req.params.amount);
+
+    dal.update(req.params.email, amount).
+        then((response) => {
+            console.log(response);
+            res.send(response);
+    });    
 });
 
-// Adding the route definition for updating the user balance
-app.get('/account/updateuserbalance/:userID/:newBalance', function(req, res){
-    dal.updateUserBalance(req.params.userID, req.params.newBalance)
-        .then((result) => {
-            console.log(result);
-            res.send(result);
-        });
-});
+// all accounts
+app.get('/account/all', function (req, res) {
 
-// Adding the route definition for updating the user activity
-app.get('/account/changeactivity/:userID/:depositDateTime/:newBalance', function(req, res){
-    dal.updateActivity(req.params.userID, req.params.depositDateTime, req.params.newBalance)
-        .then((result) => {
-            console.log(result);
-            res.send(result);
-        });
-});
-
-// Adding the route definition for returning all account data (now with the database)
-app.get('/account/all', function(req, res){
-    dal.all()
-        .then((docs) => {
+    dal.all().
+        then((docs) => {
             console.log(docs);
             res.send(docs);
-        });
+    });
 });
 
 
