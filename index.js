@@ -1,3 +1,5 @@
+require("dotenv").config();
+const path = require("path");
 var express = require('express');
 var app     = express();
 var cors    = require('cors');
@@ -83,7 +85,12 @@ app.get('/account/all', function (req, res) {
             res.send(docs);
     });
 });
-
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static("/public"));
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname,"public", "index.html"));
+    })
+}
 
 const PORT = process.env.PORT || 80;
 app.listen(PORT, () => {
