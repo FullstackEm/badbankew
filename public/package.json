@@ -5,7 +5,7 @@
   "proxy": "https://floating-springs-23192.herokuapp.com/",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build"
+    "build": "npm install"
   },
   "author": "",
   "license": "ISC",

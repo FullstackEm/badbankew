@@ -1,12 +1,16 @@
 {
   "name": "badbank-ew",
   "version": "1.0.0",
+  "engines":{
+    "node": "16.17.1"
+  },
   "description": "Capstone project for MIT fullstack professional certificate program\r Description/Motivation: This project is my effort at developing a full-stack application using the MERN stack following the directions from the MIT professional certificate in full-stack development. This is a simple application that gave me more exposure of how to get the front end talking to the back end.\r Installation Guidelines: \r 1. Clone this repository to your local machine\r 2. Install node.js\r 3.(A) Run npm install in the public directory\r 3.(B) Run npm install in the root folder to insall all necessary modules included in the package (Express, Cors, Mongodb)\r 4. In the root of the project folder, create a file named .env and include two environment variables:\r     MONGODB_URI=\"---then include your MongoDB connection string.\r     Google_CREDS=\"---then inster your Firebase Service Accoutn stringified JSON file\r 5. Open the terminal in the root project\r 6. Run node server.js (to start the server)\r 7. Open browser and go to http://localhost: 80",
   "main": "server.js",
+
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix public && npm run build --prefix public"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix public"
   },
   "keywords": [],
   "author": "emdest28@hotmail.com",
