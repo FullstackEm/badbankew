@@ -7,7 +7,12 @@ var dal     = require('./dal.js'); // add the package connecting to mongodb
 const e = require('express');
 
 // used to serve static files from public directory
-app.use(express.static('public'));
+// Step 1:
+app.use(express.static(path.resolve(__dirname, "./public/build")));
+// Step 2:
+app.get("*", function (request, response) {
+  response.sendFile(path.resolve(__dirname, "./public/build", "index.html"));
+});
 app.use(cors());
 
 // create user account
