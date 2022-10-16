@@ -1,47 +1,70 @@
-const Deposit = () => {
-    const ctx = React.useContext(UserContext);
-    const activeUser = ctx.activeUser;
-    //temporarily balance state used within the page
-    const [total, setTotal] = React.useState(()=>{return ctx.activeUser.balance});
-    const [empty, setEmpty] = React.useState(true);
+function Deposit(){
+  const [show, setShow]     = React.useState(true);
+  const [status, setStatus] = React.useState('');  
 
-    //set active user
-    const updateUser = ()=>{
-        let index = ctx.users.findIndex(user => user.email === activeUser.email);
-        ctx.users[index] = activeUser;
-    };
+  return (
+    <Card
+      bgcolor="warning"
+      header="Deposit"
+      status={status}
+      body={show ? 
+        <DepositForm setShow={setShow} setStatus={setStatus}/> :
+        <DepositMsg setShow={setShow} setStatus={setStatus}/>}
+    />
+  )
+}
 
-        //set balance to user input
-    const handleSubmit = (e)=>{
-        e.preventDefault();
-        let status = Number(e.target.num.value);
-        setTotal(total + status);
-        alert(`You deposited: $ ${status}`)
-        };
-    
-    //update activeUser balance and trigger updateUser when total changes
-    React.useEffect(() => {
-        activeUser.balance = total
-        if(activeUser.name != "Guest"){updateUser()};
-        }, [total]);
-    
-    return (
-        <div className="container-fluid main-container">
-            <Card
-            txtcolor="dark"
-            header="Deposit"
-            text={`${activeUser.name}'s Account balance $${total}`}
-            body={(
-            <div className="container">
-                <form onSubmit={handleSubmit}>
-                    <span>$ </span>
-                    <input type="number" name="num" min="0" onChange={e=>{e.target.value == 0 ? setEmpty(true) : setEmpty(false)}}></input>
-                    <br/>
-                    <button type="submit" className="btn btn-success mt-2" disabled={empty}>Deposit</button>
-                </form>
-            </div>)}
-            />
-        </div>
+function DepositMsg(props){
+  return (<>
+    <h5>Success</h5>
+    <button type="submit" 
+      className="btn btn-light" 
+      onClick={() => {
+          props.setShow(true);
+          props.setStatus('');
+      }}>
+        Deposit again
+    </button>
+  </>);
+} 
 
-    );
-};
+function DepositForm(props){
+  const [email, setEmail]   = React.useState('');
+  const [amount, setAmount] = React.useState('');
+
+  function handle(){
+    fetch(`/account/update/${email}/${amount}`)
+    .then(response => response.text())
+    .then(text => {
+        try {
+            const data = JSON.parse(text);
+            props.setStatus(JSON.stringify(data.value));
+            props.setShow(false);
+            console.log('JSON:', data);
+        } catch(err) {
+            props.setStatus('Deposit failed')
+            console.log('err:', text);
+        }
+    });
+  }
+
+  return(<>
+
+    Email<br/>
+    <input type="input" 
+      className="form-control" 
+      placeholder="Enter email" 
+      value={email} onChange={e => setEmail(e.currentTarget.value)}/><br/>
+      
+    Amount<br/>
+    <input type="number" 
+      className="form-control" 
+      placeholder="Enter amount" 
+      value={amount} onChange={e => setAmount(e.currentTarget.value)}/><br/>
+
+    <button type="submit" 
+      className="btn btn-light" 
+      onClick={handle}>Deposit</button>
+
+  </>);
+}

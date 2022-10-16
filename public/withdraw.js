@@ -1,57 +1,75 @@
-const Withdraw = () => {
-    const ctx = React.useContext(UserContext);
-    const activeUser = ctx.activeUser;
-    //temporarily balance state used within the page
-    const [total, setTotal] = React.useState(()=>{return ctx.activeUser.balance});
-    //state to decide if input is 0 or not
-    const [empty, setEmpty] = React.useState(true);
+function Withdraw(){
+  const [show, setShow]     = React.useState(true);
+  const [status, setStatus] = React.useState('');  
 
-    //set user to active user
-    const updateUser = ()=>{
-        let index = ctx.users.findIndex(user => user.email === activeUser.email);
-        ctx.users[index] = activeUser;
-    };
+  return (
+    <Card
+      bgcolor="success"
+      header="Withdraw"
+      status={status}
+      body={show ? 
+        <WithdrawForm setShow={setShow} setStatus={setStatus}/> :
+        <WithdrawMsg setShow={setShow} setStatus={setStatus}/>}
+    />
+  )
+}
 
-    //allow user input
-    const handleSubmit = (e)=>{
-        e.preventDefault();
-        let status = Number(e.target.num.value);
-        setTotal(total - status);
-        alert(`You have withdrawn: $ ${status}`)
-        };
-    //adjust balance
-    React.useEffect(() => {
-        activeUser.balance = total
-        if(activeUser.name != "Guest"){updateUser()};
-        }, [total]);
-    
-    return (
-        <div className="container-fluid main-container">
-            <Card
-            txtcolor="dark"
-            header="Withdraw"
-            text={`${activeUser.name}'s Account balance $${total}`}
-            body={(
-                <div className="container">
-                <form onSubmit={handleSubmit}>
-                    <span>$ </span>
-                    <input type="number" name="num" min="0" max={total} onChange={e=>{e.target.value == 0 ? setEmpty(true) : setEmpty(false)}}></input>
-                    <br/>
-                    <button type="submit" className="btn btn-primary mt-2" disabled={empty}>Withdraw</button>
-                </form>
-            </div>)}
-            />
-        </div>
+function WithdrawMsg(props){
+  return(<>
+    <h5>Success</h5>
+    <button type="submit" 
+      className="btn btn-light" 
+      onClick={() => {
+        props.setShow(true);
+        props.setStatus('');
+      }}>
+        Withdraw again
+    </button>
+  </>);
+}
 
-    );
-};
+function WithdrawForm(props){
+  const [email, setEmail]   = React.useState('');
+  const [amount, setAmount] = React.useState('');
 
-const SubmitBalance = (prop) => {
-    return (
-        <>
-            <input type="number" name="num" min="0" max={prop.total}></input>
-            <br/>
-            <input type="submit" className="btn btn-danger mt-2" value={prop.innerText}></input>
-       </>
-       )
-};
+  function handle(){
+    fetch(`/account/update/${email}/-${amount}`)
+    .then(response => response.text())
+    .then(text => {
+        try {
+            const data = JSON.parse(text);
+            props.setStatus(JSON.stringify(data.value));
+            props.setShow(false);
+            console.log('JSON:', data);
+        } catch(err) {
+            props.setStatus('Deposit failed')
+            console.log('err:', text);
+        }
+    });
+  }
+
+
+  return(<>
+
+    Email<br/>
+    <input type="input" 
+      className="form-control" 
+      placeholder="Enter email" 
+      value={email} 
+      onChange={e => setEmail(e.currentTarget.value)}/><br/>
+
+    Amount<br/>
+    <input type="number" 
+      className="form-control" 
+      placeholder="Enter amount" 
+      value={amount} 
+      onChange={e => setAmount(e.currentTarget.value)}/><br/>
+
+    <button type="submit" 
+      className="btn btn-light" 
+      onClick={handle}>
+        Withdraw
+    </button>
+
+  </>);
+}
